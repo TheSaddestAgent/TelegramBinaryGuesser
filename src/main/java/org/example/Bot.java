@@ -40,7 +40,6 @@ public class Bot extends TelegramLongPollingBot {
         final Long chatId = message.getChatId();
         String answer = message.getText();
         this.mid = (this.l + this.r) / 2;
-        //sendMsg(chatId.toString(), answer);
         if(this.r - this.l == 0) {
             sendMsg(chatId.toString(), "Our final number is " + l + " !\nThank you for using this bot");
             sendMsg(chatId.toString(), "Set up borders please:");
@@ -60,15 +59,16 @@ public class Bot extends TelegramLongPollingBot {
             int borderR = Integer.parseInt(strR);
             this.l = borderL;
             this.r = borderR;
-            //sendMsg(chatId.toString(), answer);
+            if(l > r){
+                int tmp = l;
+                this.l = r;
+                this.r = tmp;
+            }
             mid = (l + r) / 2;
             sendMsg(chatId.toString(), "Our number is " + mid + "\nYour number is...");
             setBorders = true;
             }
         }
-        //sendMsg(chatId.toString(), this.l + " " +  this.r);
-
-        //sendMsg(chatId.toString(), answer);
         if (answer.equals("Lower")) {
             this.r = this.mid;
             this.mid = (l + r) / 2;
