@@ -12,7 +12,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4.1.2
     - name: Place TG_PROPERTIES
-      run: echo ${{ secrets.TG_PROPERTIES }} > src/main/resources/tg.properties
+      run: echo "${{secrets.TG_PROPERTIES}}" > src/main/resources/tg.properties
     - name: Yandex Cloud CR "Login" Action for GitHub Actions
       uses: yc-actions/yc-cr-login@v2.0.0
       with:
