@@ -11,6 +11,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4.1.2
+    - name: Place TG_PROPERTIES
+      uses: rayhu/save-secret-as-file@v1
+      with:
+        secret: ${{ secrets.TG_PROPERTIES }}
+        filename: src/main/resources/tg.properties
     - name: Yandex Cloud CR "Login" Action for GitHub Actions
       uses: yc-actions/yc-cr-login@v2.0.0
       with:
