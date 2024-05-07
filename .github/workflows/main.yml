@@ -11,15 +11,18 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4.1.2
-    - name: Place TG_PROPERTIES
-      uses: rayhu/save-secret-as-file@v1
-      with:
-        secret: ${{ secrets.TG_PROPERTIES }}
-        filename: src/main/resources/tg.properties
+
+    - name: Put token to properties
+      run: 'echo "$TG_PROPS" > src/main/resources/tg.properties'
+      shell: bash
+      env:
+        TG_PROPS: ${{secrets.TG_PROPS}}
+
     - name: Yandex Cloud CR "Login" Action for GitHub Actions
       uses: yc-actions/yc-cr-login@v2.0.0
       with:
         yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS}}
+
     - name: Build, tag and push image to Yandex Cloud Container Registry
       env: 
         CR_REGISTRY: crpj474brk1fb602vqsb
@@ -28,3 +31,18 @@ jobs:
       run: |
         docker build -t cr.yandex/$CR_REGISTRY/$CR_REPO:$IMAGE_TAG .
         docker push cr.yandex/$CR_REGISTRY/$CR_REPO:$IMAGE_TAG
+
+    - name: Deploy Serverless Container
+      id: deploy-sls-container
+      uses: yc-actions/yc-sls-container-deploy@v2
+      with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+          container-name: binbot
+          folder-id: b1gikirjh8mf07r1rhf9
+          revision-service-account-id: ajeiv7nhg3d7bc0fjaa3
+          revision-cores: 1
+          revision-memory: 1024Mb
+          revision-core-fraction: 100
+          revision-concurrency: 8
+          revision-image-url: cr.yandex/crpj474brk1fb602vqsb/binbot:${{ github.sha }}
+          revision-execution-timeout: 10
