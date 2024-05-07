@@ -46,4 +46,4 @@ jobs:
           revision-concurrency: 8
           revision-image-url: cr.yandex/crpj474brk1fb602vqsb/binbot:${{ github.sha }}
           revision-execution-timeout: 10
-          revision-provisioned: 0
+          revision-provisioned: 1
